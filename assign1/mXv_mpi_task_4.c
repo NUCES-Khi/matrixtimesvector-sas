@@ -24,5 +24,17 @@ double *createVector(int size)
     return vector;
 }
 
+void matrixVectorMultiply(double *matrix, double *vector, double *result, int rows, int cols)
+{
+    for (int i = 0; i < rows; i++)
+    {
+        result[i] = 0.0;
+        for (int j = 0; j < cols; j++)
+        {
+            result[i] += matrix[i * cols + j] * vector[j];
+        }
+    }
+}
+
 
 
