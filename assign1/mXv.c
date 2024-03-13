@@ -62,6 +62,11 @@ int main(int argc, char* argv[]) {
     double* vector = createVector(matrixCols); // The vector size is the same as the number of columns in the matrix
     double* result = (double*)malloc(matrixRows * sizeof(double)); // The result vector size is the same as the number of rows in the matrix
 
+    // Initialize result vector to zero
+    for (int i = 0; i < matrixRows; i++) {
+        result[i] = 0.0;
+    }
+    
     // Print the generated matrix
     printf("Generated matrix:\n");
     for (int i = 0; i < matrixRows; i++) {
