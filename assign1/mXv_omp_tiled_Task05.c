@@ -51,12 +51,14 @@ void matrixVectorMultiplyTiledOpenMP(double** matrix, double* vector, double* re
 
 int main(int argc, char* argv[]) {
     if (argc != 3) {
-        printf("Usage: %s <matrix_rows> <matrix_cols/vector_size>\n", argv[0]);
+        printf("Usage: %s <matrix_rows> <matrix_cols/vector_size> <tile_size>\n", argv[0]);
         return 1;
     }
 
     int matrixRows = atoi(argv[1]);
     int matrixCols = atoi(argv[2]);
+    int tile_size = atoi(argv[3]);
+    assert(matrixRows % tile_size == 0 && matrixCols % tile_size == 0); // Matrix dimensions must be divisible by tile size
 
     // The number of columns in the matrix must equal the size of the vector
     if (matrixRows <= 0 || matrixCols <= 0) {
@@ -76,8 +78,6 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < matrixRows; i++) {
         result[i] = 0.0;
     }
-
-    int tileSize = 2;
 
     // Perform the matrix-vector multiplication through Naive OpemMP
     matrixVectorMultiplyTiledOpenMP(matrix, vector, result, matrixRows, matrixCols, tileSize);
@@ -116,3 +116,4 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
+
