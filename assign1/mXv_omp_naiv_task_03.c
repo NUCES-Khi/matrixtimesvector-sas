@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <omp.h>
 
 // Function to dynamically allocate a matrix and fill it with random values
 double** createMatrix(int rows, int cols) {

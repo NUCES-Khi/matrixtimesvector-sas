@@ -38,18 +38,16 @@ void matrixVectorMultiply(double *matrix, double *vector, double *result, int ro
 
 
 
-int main(int argc, char *argv[])
-{
-    int rank, size;
+int main(int argc, char* argv[]) {
     MPI_Init(&argc, &argv);
+    int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    if (argc != 3)
-    {
-        if (rank == 0)
-        {
-            printf("Usage: %s <matrix_rows> <matrix_cols/vector_size>\n", argv[0]);
+    // Ensure the correct number of arguments are provided
+    if (argc != 3) {
+        if (rank == 0) {
+            fprintf(stderr, "Usage: %s <matrixRows> <matrixCols>\n", argv[0]);
         }
         MPI_Finalize();
         return 1;
@@ -58,115 +56,66 @@ int main(int argc, char *argv[])
     int matrixRows = atoi(argv[1]);
     int matrixCols = atoi(argv[2]);
 
-    if (matrixRows <= 0 || matrixCols <= 0)
-    {
-        if (rank == 0)
-        {
-            printf("Error: Matrix rows and columns must be greater than 0.\n");
-        }
-        MPI_Finalize();
+    // The number of columns in the matrix must equal the size of the vector
+    if (matrixRows <= 0 || matrixCols <= 0) {
+        printf("Error: Matrix rows and columns must be greater than 0.\n");
         return 1;
     }
 
-    srand(time(NULL) + rank); // Seed the random number generator uniquely for each process
+    // Calculate the number of rows per process
+    int rowsPerProcess = matrixRows / size;
+    int remainingRows = matrixRows % size;
+    if (rank < remainingRows) {
+        rowsPerProcess++;
+    }
 
-    int rows_per_process = matrixRows / size;
-    int remainder = matrixRows % size;
-    int local_rows = rows_per_process + (rank < remainder ? 1 : 0);
+    // Allocate memory for local matrix and results
+    double* localMatrix = (double*)malloc(matrixCols * rowsPerProcess * sizeof(double));
+    double* localResults = (double*)calloc(rowsPerProcess, sizeof(double));
+    double* vector = NULL;
 
-    double *matrix = NULL;
-    double *vector = createVector(matrixCols);
-    double *result = NULL;
-    double *local_matrix = (double *)malloc(local_rows * matrixCols * sizeof(double));
-    double *local_result = (double *)malloc(local_rows * sizeof(double));
-
-    if (rank == 0)
-    {
+    // Root process creates the full matrix and vector
+    double* matrix = NULL;
+    if (rank == 0) {
         matrix = createMatrix(matrixRows, matrixCols);
-        result = (double *)malloc(matrixRows * sizeof(double));
+        vector = createVector(matrixCols);
+    } else {
+        vector = (double*)malloc(matrixCols * sizeof(double));
     }
 
-    // Calculate the displacements for scattering and gathering
-    int *sendcounts = malloc(size * sizeof(int));
-    int *displs = malloc(size * sizeof(int));
-    for (int i = 0; i < size; i++)
-    {
-        sendcounts[i] = (rows_per_process + (i < remainder ? 1 : 0)) * matrixCols;
-        displs[i] = (i > 0 ? displs[i - 1] + sendcounts[i - 1] : 0);
-    }
-
-    // Distribute the matrix to all processes
-    MPI_Scatterv(matrix, sendcounts, displs, MPI_DOUBLE, local_matrix, local_rows * matrixCols, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    // Distribute the matrix to all processes
-    MPI_Scatterv(matrix, sendcounts, displs, MPI_DOUBLE, local_matrix, local_rows * matrixCols, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    printf("Process %d received local matrix:\n", rank);
-    for (int i = 0; i < local_rows; i++)
-    {
-        for (int j = 0; j < matrixCols; j++)
-        {
-            printf("%f ", local_matrix[i * matrixCols + j]);
-        }
-        printf("\n");
-    }
-    printf("\n");
+    // Scatter the matrix to all processes
+    MPI_Scatter(matrix, matrixCols * rowsPerProcess, MPI_DOUBLE, localMatrix, matrixCols * rowsPerProcess, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
     // Broadcast the vector to all processes
     MPI_Bcast(vector, matrixCols, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
-    // Perform the local multiplication
-    matrixVectorMultiply(local_matrix, vector, local_result, local_rows, matrixCols);
-    // Perform the local multiplication
-    matrixVectorMultiply(local_matrix, vector, local_result, local_rows, matrixCols);
-    printf("Process %d local result:\n", rank);
-    for (int i = 0; i < local_rows; i++)
-    {
-        printf("%f ", local_result[i]);
-    }
-    printf("\n");
+    // Perform the local matrix-vector multiplication
+    matrixVectorMultiply(localMatrix, vector, localResults, rowsPerProcess, matrixCols);
 
     // Gather the local results into the final result vector
-    MPI_Gatherv(local_result, local_rows, MPI_DOUBLE, result, sendcounts, displs, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    // Gather the local results into the final result vector
-    MPI_Gatherv(local_result, local_rows, MPI_DOUBLE, result, sendcounts, displs, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    if (rank == 0)
-    {
-        printf("Final result vector:\n");
-        for (int i = 0; i < matrixRows; i++)
-        {
+    double* result = NULL;
+    if (rank == 0) {
+        result = (double*)malloc(matrixRows * sizeof(double));
+    }
+    MPI_Gather(localResults, rowsPerProcess, MPI_DOUBLE, result, rowsPerProcess, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+
+    // Root process prints the result
+    if (rank == 0) {
+        printf("Resulting vector:\n");
+        for (int i = 0; i < matrixRows; i++) {
             printf("%f\n", result[i]);
         }
-    }
-
-    if (rank == 0)
-    {
-        matrix = createMatrix(matrixRows, matrixCols);
-        printf("Generated matrix:\n");
-        for (int i = 0; i < matrixRows; i++)
-        {
-            for (int j = 0; j < matrixCols; j++)
-            {
-                printf("%f ", matrix[i * matrixCols + j]);
-            }
-            printf("\n");
-        }
-        printf("\n");
+        free(result);
     }
 
     // Cleanup
-    if (rank == 0)
-    {
-        free(matrix);
-        free(result);
-    }
-    free(local_matrix);
-    free(local_result);
+    free(localMatrix);
+    free(localResults);
     free(vector);
-    free(sendcounts);
-    free(displs);
+    if (rank == 0) {
+        free(matrix);
+    }
 
     MPI_Finalize();
     return 0;
 }
-
-
-

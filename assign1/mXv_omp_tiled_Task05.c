@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <omp.h>
+#include <assert.h>
 
 // Function to dynamically allocate a matrix and fill it with random values
 double** createMatrix(int rows, int cols) {
@@ -50,15 +52,15 @@ void matrixVectorMultiplyTiledOpenMP(double** matrix, double* vector, double* re
 }
 
 int main(int argc, char* argv[]) {
-    if (argc != 3) {
+    if (argc != 4) {
         printf("Usage: %s <matrix_rows> <matrix_cols/vector_size> <tile_size>\n", argv[0]);
         return 1;
     }
 
     int matrixRows = atoi(argv[1]);
     int matrixCols = atoi(argv[2]);
-    int tile_size = atoi(argv[3]);
-    assert(matrixRows % tile_size == 0 && matrixCols % tile_size == 0); // Matrix dimensions must be divisible by tile size
+    int tileSize = atoi(argv[3]);
+    assert(matrixRows % tileSize == 0 && matrixCols % tileSize == 0); // Matrix dimensions must be divisible by tile size
 
     // The number of columns in the matrix must equal the size of the vector
     if (matrixRows <= 0 || matrixCols <= 0) {
