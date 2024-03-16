@@ -15,4 +15,6 @@
 
     - Solution1: Reduced the number of matrixes
     - Solution2: Tried to use MPI_Scatterv and MPI_Gatherv, but I was unable to implement these fucntions.
-    - **Resolved**
+    - Solution3: Check possible memory leaks. ![image](https://github.com/NUCES-Khi/matrixtimesvector-sas/assets/88710028/4325b3f1-281b-4c3d-a342-00fe5003bb70)
+
+    - **Couldn't Resolved**
