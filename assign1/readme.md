@@ -47,7 +47,7 @@ This analysis examines various implementations for matrix-vector multiplication 
 * Variation in execution time exists between task files for the same size due to factors like algorithms or task distribution.
 * Based on the graph, `mXv_naive_mpi_task_4` appears to be the fastest overall, suggesting the naive MPI implementation with task number 4 offers the most efficient approach for these matrix sizes.
 
-**Overall, the naive MPI implementation, particularly `mXv_naive_mpi_task_4`, might be most efficient for the studied sizes. Further investigation is needed to understand the performance variation and why naive MPI outperforms tiled MPI here.**
+**Overall, the naive MPI implementation, particularly `mXv_naive_mpi_task_4`, might be most efficient for the studied sizes. This may be due to the tile size being set as one (1). Further investigation is needed to understand the performance variation and why naive MPI outperforms tiled MPI here.**
 
 
 ## Major Problems Encountered
