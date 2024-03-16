@@ -7,6 +7,26 @@
 |k21-3100|Muhammad Sameed|
 ## Output Screenshots
 //-- Add output screenshots here. --//
+![image](https://github.com/NUCES-Khi/matrixtimesvector-sas/assets/88710028/cdee955a-c105-4510-8434-7e7d878407ea)
+
+Information about the Results data:
+![image](https://github.com/NUCES-Khi/matrixtimesvector-sas/assets/88710028/f827e0af-4656-48da-9883-8e15b01e39da)
+
+Descriptive statistics for the 'Time taken' column:
+![image](https://github.com/NUCES-Khi/matrixtimesvector-sas/assets/88710028/a0107772-a0e6-4222-8698-2c3a574f57b8)
+
+Average Time Taken by each Matrix Size:
+![image](https://github.com/NUCES-Khi/matrixtimesvector-sas/assets/88710028/a7d6eea8-a138-4e23-a882-6372bb67422c)
+
+Time Taken vs. Matrix Size:
+![image](https://github.com/NUCES-Khi/matrixtimesvector-sas/assets/88710028/113fb729-0b3f-4d9c-9028-05cb1e02523f)
+
+Avg. Time Taken by Task file and Matrix Size:
+![image](https://github.com/NUCES-Khi/matrixtimesvector-sas/assets/88710028/d3a0918b-6a6f-4bf5-b9fc-fff3f725175c)
+
+
+
+
 ## Results and Analysis
 //-- Show graphs results and charts where necessary and discuss the results and what they signify. --// 
 ## Major Problems Encountered
