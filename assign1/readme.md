@@ -59,3 +59,7 @@ This analysis examines various implementations for matrix-vector multiplication 
     - Solution3: Check possible memory leaks. ![image](https://github.com/NUCES-Khi/matrixtimesvector-sas/assets/88710028/4325b3f1-281b-4c3d-a342-00fe5003bb70)
 
     - **Couldn't Resolved**
+
+## System Configuration:
+**Processor:** Intel Core i7 8th Generation - 8 Cores - 16 Logical Processors
+**RAM:** 8GB DDR4
