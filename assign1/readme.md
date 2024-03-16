@@ -61,5 +61,5 @@ This analysis examines various implementations for matrix-vector multiplication 
     - **Couldn't Resolved**
 
 ## System Configuration:
-**Processor:** Intel Core i7 8th Generation - 8 Cores - 16 Logical Processors
-**RAM:** 8GB DDR4
+1. **Processor:** Intel Core i7 8th Generation - 8 Cores - 16 Logical Processors
+2. **RAM:** 8GB DDR4
