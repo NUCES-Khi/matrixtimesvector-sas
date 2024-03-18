@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Define the sizes to test
+# Defined the sizes to test
 sizes=(64 128 256 512 1024 2048 4096 8192)
 
-# Define the tile size for tiled programs
+# Defined the tile size for tiled programs
 tile_size=1
 
-# Initialize a variable to store the cumulative duration
+# Initialized a variable to store the cumulative duration
 cumulative_duration=0
 test_count=0
 
@@ -18,7 +18,6 @@ run_and_time() {
     local extra_arg=$4
     local is_mpi=$5
 
-    # Run the program and time it
     local start_time=$(date +%s.%N)
     if [[ "$is_mpi" == "yes" ]]; then
         mpirun -np 4 ./$program $size $size $extra_arg # Adjust -np (number of processes) as needed
@@ -31,7 +30,7 @@ run_and_time() {
     fi
     local end_time=$(date +%s.%N)
     
-    # Calculate the duration
+    # Calculating the duration
     local duration=$(echo "$end_time - $start_time" | bc)
     
     # Update cumulative duration and test count
