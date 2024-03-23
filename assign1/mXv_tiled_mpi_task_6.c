@@ -1,3 +1,9 @@
+/*
+ * Programmer(s) : Syed Saad Ullah Hussaini, K214703 Ali Raza, K213100 Muhammad Sameed
+ * Date: 12 March 2024
+ * Desc: MPI Tiled version of matrix vector multiplication. 
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
