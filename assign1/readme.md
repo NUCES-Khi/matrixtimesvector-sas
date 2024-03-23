@@ -35,19 +35,19 @@ This analysis examines various implementations for matrix-vector multiplication 
 **Graph 1: Time vs. Matrix Size**
 
 * Execution time increases with matrix size for all implementations due to growing computations.
-* Sequential implementation is slowest (limited to one core).
+* MPI Naive Implementation is the slowest..
 * OpenMP implementations generally outperform sequential, with tiling impact unclear for these matrix sizes.
-* MPI implementations show varying performance. Interestingly, the naive MPI version might be faster than the tiled version for the studied sizes, suggesting potential tiling overhead.
+* MPI implementations show varying performance. Interestingly, the tiled MPI version might be faster than the naive version for the studied sizes.
 
-**Optimal implementation depends on matrix size and resources.** For smaller sizes, sequential might suffice. For larger sizes, parallel implementations (OpenMP or MPI) are necessary. While tiled MPI often excels, here the naive MPI version might be fastest.
+**Optimal implementation depends on matrix size and resources.** For smaller sizes, sequential might suffice. For larger sizes, parallel implementations (OpenMP or MPI) are necessary. While tiled MPI often excels, here the naive OMP version might be fastest. The in-depth study is required in this case.
 
 **Graph 2: Average Time by Task File and Matrix Size**
 
 * Similar to Graph 1, execution time increases with matrix size for all task files.
 * Variation in execution time exists between task files for the same size due to factors like algorithms or task distribution.
-* Based on the graph, `mXv_naive_mpi_task_4` appears to be the fastest overall, suggesting the naive MPI implementation with task number 4 offers the most efficient approach for these matrix sizes.
+* Based on the graph, `mXv_omp_naiv_task_03` appears to be the fastest overall, suggesting the naive OMP implementation with task number 3 offers the most efficient approach for these matrix sizes.
 
-**Overall, the naive MPI implementation, particularly `mXv_naive_mpi_task_4`, might be most efficient for the studied sizes. This may be due to the tile size being set as one (1). Further investigation is needed to understand the performance variation and why naive MPI outperforms tiled MPI here.**
+**Overall, the naive OMP implementation, particularly `mXv_omp_naiv_task_03`, might be most efficient for the studied sizes. Further investigation is needed to understand the performance variation and why naive OMP outperforms tiled MPI and OMP here.**
 
 
 ## Major Problems Encountered
@@ -63,3 +63,13 @@ This analysis examines various implementations for matrix-vector multiplication 
 ## System Configuration:
 1. **Processor:** Intel Core i7 8th Generation - 8 Cores - 16 Logical Processors
 2. **RAM:** 8GB DDR4
+
+## References:
+This report was compiled with the assistance of Microsoft’s AI assistant and Google’s Gemini AI, which provided information, insights, and wording for the content within.
+
+**Microsoft AI:**
+- Microsoft Corporation. "Microsoft AI Assistant." *Microsoft*, 2023, www.microsoft.com/en-us/ai.
+
+**Google Gemini AI:**
+- Google LLC. "Gemini AI." *Google*, 2024, www.google.com.
+
